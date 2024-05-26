@@ -98,7 +98,7 @@ where
         for _ in 0..4 {
             let bits = (data & 0b1100_0000) >> 6;
             block!(self.spi.send(patterns[bits as usize]))?;
-            block!(self.spi.read()).ok();
+            self.spi.read().ok();
             data <<= 2;
         }
         Ok(())
@@ -108,7 +108,7 @@ where
         // Should be > 300μs, so for an SPI Freq. of 3.8MHz, we have to send at least 1140 low bits or 140 low bytes
         for _ in 0..140 {
             block!(self.spi.send(0))?;
-            block!(self.spi.read()).ok();
+            self.spi.read().ok();
         }
         Ok(())
     }
@@ -142,7 +142,7 @@ where
         }
         self.flush()?;
         // Now, resolve the offset we introduced at the beginning
-        block!(self.spi.read())?;
+        self.spi.read().ok();
         Ok(())
     }
 }
